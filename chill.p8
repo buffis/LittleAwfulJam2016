@@ -47,6 +47,8 @@ end
 
 function _update()
 	gameticks += 1
+	shakex = rnd(shake)
+	shakey = rnd(shake)
 	if     game_state == state_title    then update_title_or_gameover()
 	elseif game_state == state_game     then update_game()
 	elseif game_state == state_gameover then update_title_or_gameover()
@@ -69,6 +71,7 @@ function start_game()
 	game_state = state_game
 	is_shooting = false
 	score = 0
+	shake = 1
 
 	x = 64 y = 94
 	bullet_wait = 0
@@ -148,7 +151,11 @@ function handle_game()
 	x = min(x, 127)    y = min(y, 127)
 
 	if band(gameticks, 31) == 31 then
-		enemy_spawn(120, 64, -3, 0, 0)
+		if band(gameticks, 32) == 32 then
+			enemy_spawn(120, 100, -2.5, 0, 0, 0)
+		else
+			enemy_spawn(0, 100, 2.5, 0, 0, 0)
+		end
 	end
 
 	-- particle_spawn(x, y, rnd(5)-2, rnd(5)-2, 15, 1)
@@ -161,6 +168,13 @@ function add_score(s)
 		highscore = score
 		new_highscore = true
 	end
+end
+
+function sx(x)
+	return x + shakex
+end
+function sy(y)
+	return y + shakey
 end
 
 -- draw logic below
@@ -177,9 +191,9 @@ function draw_game()
  	-- player
  	flipx = player_direction == dir_left
  	if band(gameticks, 4) > 0 then
- 		spr(0, x, y, 2, 2, flipx)
+ 		spr(0, sx(x), sy(y), 2, 2, flipx)
  	else
- 		spr(18, x, y, 2, 2, flipx)
+ 		spr(18, sx(x), sy(y), 2, 2, flipx)
  	end
 
  	-- enemies
@@ -207,8 +221,8 @@ function draw_floow()
 	for t=-1,8,1 do
 		tmp = 16-2*band(gameticks, 15)
 		tmp += t*16
-		spr(4, tmp, 110, 2, 1)
-		spr(4, tmp, 20, 2, 1)
+		spr(4, sx(tmp), sy(110), 2, 1)
+		spr(4, sx(tmp), sy(20), 2, 1)
 	end
 end
 
@@ -221,7 +235,7 @@ function draw_chillray()
 			if spr_tmp < chill_c then
 				spr_tmp = chill_l2
 			else
-				spr(spr_tmp, t+rnd(2), ty+rnd(6))
+				spr(spr_tmp, sx(t+rnd(2)), sy(ty+rnd(6)))
 				spr_tmp -= 1
 			end
 		end
@@ -231,7 +245,7 @@ function draw_chillray()
 			if spr_tmp > chill_l2 then
 				spr_tmp = chill_c
 			else
-				spr(spr_tmp, t+rnd(2), ty+rnd(6))
+				spr(spr_tmp, sx(t+rnd(2)), sy(ty+rnd(6)))
 				spr_tmp += 1
 			end
 		end
@@ -268,8 +282,8 @@ function intersects_bullet(enemy)
 end
 
 enemies = {}
-function enemy_spawn(x, y, vx, vy, enemy_type)
-	e = {x=x,y=y,vx=vx,vy=vy,bounce=7+rnd(10),enemy_type=enemy_type,dead=false}
+function enemy_spawn(x, y, vx, vy, bounce, enemy_type)
+	e = {x=x,y=y,vx=vx,vy=vy,bounce=bounce,enemy_type=enemy_type,dead=false}
 	add(enemies, e)
 end
 function enemies_move()
@@ -277,8 +291,8 @@ function enemies_move()
 		e.x+=e.vx
 		e.y+=e.vy
 		e.vy += gravity
-		if e.y > 100 then
-			e.y = 100
+		if e.y > 95 then
+			e.y = 95
 			e.vy = -e.bounce
 		end
 		if e.x <= 0 then
@@ -308,7 +322,7 @@ function enemies_prune() -- todo: optimize maybe?
 end
 function enemies_draw()
 	function e_draw(e)
-		spr(spr_enemy, e.x, e.y, 2, 2)
+		spr(spr_enemy, sx(e.x), sy(e.y), 2, 2)
 	end
 	foreach(enemies, e_draw)
 end
@@ -359,7 +373,7 @@ function bullets_prune() -- todo: optimize maybe?
 end
 function bullets_draw()
 	function b_draw(b)
-		spr(b.sprite, b.x, b.y)
+		spr(b.sprite, sx(b.x), sy(b.y))
 	end
 	foreach(bullets, b_draw)
 end
@@ -400,7 +414,7 @@ function particles_prune() -- todo: optimize maybe?
 end
 function particles_draw()
 	function p_draw(p)
-		rectfill(p.x,p.y,p.x+p.size,p.y+p.size,rnd(16))
+		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size),sy(p.y+p.size),rnd(16))
 	end
 	foreach(particles, p_draw)
 end
