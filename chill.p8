@@ -69,6 +69,7 @@ function start_game()
 	game_state = state_game
 	is_shooting = false
 	score = 0
+
 	x = 64 y = 94
 	bullet_wait = 0
 	player_direction = dir_right
@@ -150,7 +151,6 @@ function handle_game()
 		enemy_spawn(120, 64, -3, 0, 0)
 	end
 
-	add_score(1)
 	-- particle_spawn(x, y, rnd(5)-2, rnd(5)-2, 15, 1)
 
 end
@@ -261,10 +261,10 @@ function intersects_bullet(enemy)
 		xmatch = b.x > (ex-2) and b.x < (ex+2)
 		if ymatch and xmatch then
 			enemy.dead = true
+			add_score(1)
 		end
 	end
 	foreach(bullets, b_intersects)
-
 end
 
 enemies = {}
