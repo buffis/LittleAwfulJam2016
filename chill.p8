@@ -21,6 +21,7 @@ state_game      = 2
 state_gameover  = 3
 input_wait_time = 10
 move_step       = 2
+gravity         = 2
 
 -- sprites
 chill_c = 22
@@ -220,14 +221,19 @@ end
 
 enemies = {}
 function enemy_spawn(x, y, enemy_type)
-	e = {x=x,y=y,enemy_type=enemy_type,dead=false}
+	e = {x=x,y=y,vx=0,vy=0,bounce=8+rnd(6),enemy_type=enemy_type,dead=false}
 	add(enemies, e)
 end
 
 function enemies_move()
 	function e_move(e)
 		e.x+=-1
-		e.y+=0
+		e.y+=e.vy
+		e.vy += gravity
+		if e.y > 100 then
+			e.y = 100
+			e.vy = -e.bounce
+		end
 	end
 	foreach(enemies, e_move)
 end
