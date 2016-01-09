@@ -208,7 +208,7 @@ function draw_game()
 	dumb_text_draw()
 
 	color(7)
- 	print(score, 6, 6)
+ 	print("chill factor: " .. score .. "%", 33, 2)
 end
 
 function dumb_text_draw()
