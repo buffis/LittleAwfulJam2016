@@ -165,8 +165,25 @@ function handle_game()
 		end
 	end
 
-	-- particle_spawn(x, y, rnd(5)-2, rnd(5)-2, 15, 1)
+	-- check player death
+	handle_player_death()
+end
 
+function handle_player_death()
+	was_hit = false
+	function e_death(e)
+		if (e.x > (x-7)) and (e.x < (x+10)) then
+			if (e.y < (y+10)) and (e.y > (y-10)) then
+				was_hit = true
+			end
+		end
+	end
+	foreach(enemies, e_death)
+	if was_hit then
+		while true do
+			print("DEAD", 30, 30)
+		end
+	end
 end
 
 function add_score(s) 
