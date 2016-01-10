@@ -372,17 +372,22 @@ function draw_title()
 
 	color(7)
 	print("start game", 40, 80)
-	print("god mode", 40, 90)
+	print("chill", 40, 90)
 	if god_mode then
-		print("(on)", 80, 90)
+		print("(on)", 70, 90)
 	else
-		print("(off)", 80, 90)
+		print("(off)", 70, 90)
 	end
 	if menu_option == 0 then
 		rectfill(30, 80, 33, 83, 7)
 	end
 	if menu_option == 1 then
 		rectfill(30, 90, 33, 93, 7)
+	end
+
+	if god_mode then
+		print("in chill mode, you're too chill", 3, 115)
+		print("to take damage from enemies", 10, 123)
 	end
 end
 
