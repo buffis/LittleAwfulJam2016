@@ -19,6 +19,7 @@ __lua__
 state_title     = 1
 state_game      = 2
 state_gameover  = 3
+state_game_won  = 4
 input_wait_time = 10
 move_step       = 2
 gravity         = 1
@@ -58,6 +59,7 @@ function _update()
 	if     game_state == state_title    then update_title_or_gameover()
 	elseif game_state == state_game     then update_game()
 	elseif game_state == state_gameover then update_title_or_gameover()
+	elseif game_state == state_game_won then update_game_won()
 	end
 end
 
@@ -68,6 +70,7 @@ function _draw()
 	if     game_state == state_title    then draw_title()
 	elseif game_state == state_game     then draw_game()
 	elseif game_state == state_gameover then draw_gameover()
+	elseif game_state == state_game_won then draw_game_won()
 	end
 end
 
@@ -78,6 +81,7 @@ function start_game()
 	is_shooting = false
 	score = 0
 	shake = 1
+	snowflake_speed = 4
 
 	x = 64 y = 94
 	bullet_wait = 0
@@ -118,6 +122,25 @@ function update_game()
 	bullets_prune()
 	particles_move()
 	particles_prune()
+end
+
+function update_game_won()
+	if shake > 1 then
+		shake -= 0.1
+	else
+		shake = 1
+	end
+	if snowflake_speed > 0 then
+		snowflake_speed -= 0.1
+	else
+		snowflake_speed = 0
+	end
+
+	enemies_prune()
+	bullets_prune()
+	particles_move()
+	particles_prune()
+
 end
 
 function handle_game()
@@ -205,7 +228,7 @@ function handle_player_death()
 end
 
 function add_score(s) 
-	score += s
+	score += s*20
 	if score > highscore then
 		highscore = score
 		new_highscore = true
@@ -251,8 +274,33 @@ function draw_game()
  	print("chill factor: " .. score .. "%", 33, 2)
 end
 
+function draw_game_won()
+	-- draw background
+	draw_bg()
+
+	draw_floow()
+	
+ 	-- player
+ 	flipx = player_direction == dir_left
+ 	if band(gameticks, 4) > 0 then
+ 		spr(0, sx(x), sy(y), 2, 2, flipx)
+ 	else
+ 		spr(18, sx(x), sy(y), 2, 2, flipx)
+ 	end
+
+ 	-- particles
+ 	particles_draw()
+
+	color(7)
+ 	print("chill factor: 100%", 33, 2)
+end
+
+
 function dumb_text_draw()
- 	if score > 14 then
+	if score >= 100 then
+		score = 100
+		game_state = state_game_won
+ 	elseif score > 14 then
  		big_print("chill", 25, 20)
 		big_print("frenzy", 10, 40)
 		shake = 13
@@ -298,12 +346,12 @@ function draw_bg()
 	if score > 7 then
 		draw_snow_bg()	
 	end
-	if score > 14 then
+	if score > 14 and game_state != state_game_won then
 		particle_spawn(16+rnd(94), rnd(128), rnd(10)-5, rnd(10)-5, 11, 3)
 	end
 end
 function draw_snow_bg()
-	tmp = band(gameticks, 7)*4
+	tmp = band(gameticks, 7)*snowflake_speed
 	spp = snowflake
 	for yy=18,100,32 do
 		for xx=-32,160,32 do
