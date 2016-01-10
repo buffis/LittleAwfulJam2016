@@ -20,6 +20,7 @@ state_title     = 1
 state_game      = 2
 state_gameover  = 3
 state_game_won  = 4
+state_credits   = 5
 input_wait_time = 10
 move_step       = 2
 gravity         = 1
@@ -60,6 +61,7 @@ function _update()
 	elseif game_state == state_game     then update_game()
 	elseif game_state == state_gameover then update_title_or_gameover()
 	elseif game_state == state_game_won then update_game_won()
+	elseif game_state == state_credits  then update_credits()
 	end
 end
 
@@ -71,6 +73,7 @@ function _draw()
 	elseif game_state == state_game     then draw_game()
 	elseif game_state == state_gameover then draw_gameover()
 	elseif game_state == state_game_won then draw_game_won()
+	elseif game_state == state_credits  then draw_credits()
 	end
 end
 
@@ -125,6 +128,7 @@ function update_game()
 end
 
 function update_game_won()
+	-- stop shake and snowflakes
 	if shake > 1 then
 		shake -= 0.1
 	else
@@ -136,10 +140,47 @@ function update_game_won()
 		snowflake_speed = 0
 	end
 
+	-- state 2
+	if (shake == 1) and (snowflake_speed == 0) then
+		if x < 55 then
+			x += 0.5
+			player_direction = dir_right
+		elseif x > 57 then
+			x -= 0.5
+			player_direction = dir_left
+		else
+			x = 56
+			player_direction = dir_right
+		end
+	end
+
+	-- state 3
+	if (shake == 1) and (snowflake_speed == 0) and (x == 56) then
+		game_state = state_credits
+	end
+
+	-- state 4 (girl enters)
+
+	-- state 5 (dialog)
+
+	-- state 6 (face away)
+
+	-- state 7 (dialog)
+
+	-- state 8 (jump out of screen)
+
+	-- state 9 (explosion)
+
+	-- state 10 (start credits)
+
 	enemies_prune()
 	bullets_prune()
 	particles_move()
 	particles_prune()
+
+end
+
+function update_credits()
 
 end
 
@@ -295,6 +336,10 @@ function draw_game_won()
  	print("chill factor: 100%", 33, 2)
 end
 
+function draw_credits()
+	print("the end", 33, 2)
+end
+
 
 function dumb_text_draw()
 	if score >= 100 then
@@ -374,7 +419,11 @@ function draw_floow()
 	palt(0, false)
 	palt(1, true)
 	for t=-1,8,1 do
-		tmp = 16-2*band(gameticks, 15)
+		if game_state == state_game_won then
+			tmp = 16
+		else
+			tmp = 16-2*band(gameticks, 15)
+		end
 		tmp += t*16
 		spr(4, sx(tmp), sy(110), 2, 1)
 		spr(4, sx(tmp), sy(20), 2, 1)
