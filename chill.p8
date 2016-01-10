@@ -47,6 +47,8 @@ function _init()
 	input_wait_time = 10
 	game_state = state_title
 	gameticks = 0
+	god_mode = false
+	menu_option = 0
 end
 
 function _update()
@@ -85,7 +87,19 @@ end
 
 function update_title_or_gameover()
 	if input_wait_time == 0 then
-		if btn(0) or btn(1) or btn(2) or btn(3) then start_game() end
+		-- if btn(0) or btn(1) or btn(2) or btn(3) then start_game() end
+		if btn(2) then
+			menu_option = 0
+		elseif btn(3) then
+			menu_option = 1
+		elseif btn(1) or btn(4) then
+			if menu_option == 0 then
+				start_game()
+			elseif menu_option == 1 then
+				god_mode = not god_mode
+				input_wait_time = 10
+			end
+		end
 	else
 		input_wait_time -= 1
 	end
@@ -181,7 +195,7 @@ function handle_player_death()
 		end
 	end
 	foreach(enemies, e_death)
-	if was_hit then
+	if was_hit and not god_mode then
 		print("YOU ARE DEAD", 40, sy(65))
 		while true do
 			
@@ -254,9 +268,29 @@ function dumb_text_draw()
 end
 
 function draw_title()
+	color(8)
+	print("murder", 50, 10)
+
+	color(2)
+	print("death", 52, 20)
+
+	color(12)
+	print("chill", 52, 30)
+
 	color(7)
-	print("press any arrow key to play", 10, 70)
-	-- spr(1, 40, 50, 7, 2)
+	print("start game", 40, 80)
+	print("god mode", 40, 90)
+	if god_mode then
+		print("(on)", 80, 90)
+	else
+		print("(off)", 80, 90)
+	end
+	if menu_option == 0 then
+		rectfill(30, 80, 33, 83, 7)
+	end
+	if menu_option == 1 then
+		rectfill(30, 90, 33, 93, 7)
+	end
 end
 
 function draw_bg()
