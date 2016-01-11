@@ -30,6 +30,9 @@ chill_l2 = 26
 
 snowflake = 192
 
+spr_penguin = 42
+penguin_x = 140
+
 spr_enemy = 67
 
 spr_big_a = 128
@@ -37,6 +40,8 @@ spr_big_a = 128
 dir_left = 4
 dir_right = 6
 looking_up = false
+
+ending_state = 0
 
 -- pico-8 entry points
 
@@ -147,20 +152,26 @@ end
 
 
 function update_game_won()
+	-- state 0
 	-- stop shake and snowflakes
-	if shake > 1 then
-		shake -= 0.1
-	else
-		shake = 1
-	end
-	if snowflake_speed > 0 then
-		snowflake_speed -= 0.1
-	else
-		snowflake_speed = 0
+	if ending_state == 0 then
+		if shake > 1 then
+			shake -= 0.1
+		else
+			shake = 1
+		end
+		if snowflake_speed > 0 then
+			snowflake_speed -= 0.1
+		else
+			snowflake_speed = 0
+		end
+		if (shake == 1) and (snowflake_speed == 0) then
+			ending_state += 1
+		end
 	end
 
-	-- state 2
-	if (shake == 1) and (snowflake_speed == 0) then
+	-- state 1
+	if ending_state == 1 then
 		if x < 55 then
 			x += 0.5
 			player_direction = dir_right
@@ -170,19 +181,67 @@ function update_game_won()
 		else
 			x = 56
 			player_direction = dir_right
+			ending_state += 1
+			ending_ticker = 0
 		end
 	end
 
-	-- state 3
-	if (shake == 1) and (snowflake_speed == 0) and (x == 56) then
-		game_state = state_credits
+	-- state 2 (wow)
+	if ending_state == 2 then
+		ending_ticker += 1
 	end
 
-	-- state 4 (girl enters)
+	-- state 3 (everything is so chill)
+	if ending_state == 3 then
+		ending_ticker += 1
+	end
 
-	-- state 5 (dialog)
+	-- state 4 (penguin enters)
+	if ending_state == 4 then
+		penguin_x -= 1
+		if (penguin_x <= 70) then
+			ending_state += 1
+			ending_ticker = 0
+		end
+	end
+
+	-- state 5 (i love you mr chill)
+	if ending_state == 5 then
+		ending_ticker += 1
+	end
+
+	-- state 6 (please have my babies)
+	if ending_state == 6 then
+		ending_ticker += 1
+	end
 
 	-- state 6 (face away)
+	if ending_state == 7 then
+		player_direction = dir_left
+		x -= 0.2
+		if x <= 40 then
+			ending_state += 1
+			x = 40
+		end
+	end
+
+	if ending_state == 8 then
+		ending_ticker += 1
+	end
+	if ending_state == 9 then
+		ending_ticker += 1
+	end
+	if ending_state == 10 then
+		ending_ticker += 1
+	end
+	if ending_state == 11 then
+		ending_ticker += 1
+	end
+	if ending_state == 12 then
+		ending_ticker += 1
+	end
+
+
 
 	-- state 7 (dialog)
 
@@ -191,6 +250,9 @@ function update_game_won()
 	-- state 9 (explosion)
 
 	-- state 10 (start credits)
+	if ending_state == 9 then
+		-- game_state = state_credits
+	end
 
 	enemies_prune()
 	bullets_prune()
@@ -291,7 +353,7 @@ function handle_player_death()
 end
 
 function add_score(s) 
-	score += s
+	score += s*50
 	if score > highscore then
 		highscore = score
 		new_highscore = true
@@ -340,9 +402,8 @@ end
 function draw_game_won()
 	-- draw background
 	draw_bg()
-
 	draw_floow()
-	
+
  	-- player
  	flipx = player_direction == dir_left
  	if band(gameticks, 4) > 0 then
@@ -353,9 +414,57 @@ function draw_game_won()
 
  	-- particles
  	particles_draw()
-
 	color(7)
  	print("chill factor: 100%", 33, 2)
+
+	spr(spr_penguin, penguin_x, y, 2, 2)
+
+ 	if ending_state == 2 then
+ 		give_cool_name_later("wow", 100)
+	end
+	if ending_state == 3 then
+		give_cool_name_later("everything is so chill", 200)
+	end
+
+	if ending_state == 5 then
+		give_cool_name_later("i love you mr chill", 200)
+	end
+	if ending_state == 6 then
+		give_cool_name_later("please have my babies", 200)
+	end
+
+	if ending_state == 8 then
+		give_cool_name_later("i have places to be", 200)
+	end
+	if ending_state == 9 then
+		give_cool_name_later("people to chill", 140)
+	end
+	if ending_state == 10 then
+		give_cool_name_later("besides", 70)
+	end
+	if ending_state == 11 then
+		give_cool_name_later("theres no chill in children", 150)
+	end
+	 
+end
+
+function give_cool_name_later(slowtext, end_count)
+	was_printed = slow_print(slowtext, ending_ticker, end_count, 5, 50)
+	if was_printed then
+		ending_state += 1
+		ending_ticker = 0
+	end
+end
+
+function slow_print(slowtext, ticker, maxtick, textx, texty)
+	chars_to_show = 1 + (ticker / 4)
+	if chars_to_show >= #slowtext then
+		print(slowtext, textx, texty)
+	else
+		print(sub(slowtext, 1, chars_to_show), textx, texty)
+		sfx(0)
+	end
+	return ticker >= maxtick
 end
 
 function draw_credits()
