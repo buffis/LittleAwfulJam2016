@@ -88,21 +88,22 @@ function start_game()
 	bullet_wait = 0
 	player_direction = dir_right
 	new_highscore = false
+
+	clear_enemies()
 end
 
 function update_title_or_gameover()
 	if input_wait_time == 0 then
-		-- if btn(0) or btn(1) or btn(2) or btn(3) then start_game() end
 		if btn(2) then
 			menu_option = 0
 		elseif btn(3) then
 			menu_option = 1
 		elseif btn(1) or btn(4) then
-			if menu_option == 0 then
-				start_game()
-			elseif menu_option == 1 then
+			if menu_option == 1 then
 				god_mode = not god_mode
 				input_wait_time = 10
+			elseif menu_option == 0 then
+				start_game()
 			end
 		end
 	else
@@ -126,6 +127,12 @@ function update_game()
 end
 
 function update_dead()
+	if shake > 1 then
+		shake -= 0.4
+	else
+		shake = 1
+	end
+
 	-- update enemies
 	enemies_move()
 	enemies_prune()
@@ -272,6 +279,7 @@ function handle_player_death()
 	foreach(enemies, e_death)
 	if was_hit and not god_mode then
 		game_state = state_dead
+		input_wait_time = 30
 		for i=0,40,1 do
 			particle_spawn(x, y, rnd(10)-5, rnd(10)-5, 10+rnd(6), 1+rnd(4))
 		end
@@ -365,6 +373,32 @@ function draw_dead()
 	color(7)
  	print("chill factor: " .. score .. "%", 33, 2)
  	print("game over", 45, 42)
+ 	print("try again ", 50, 72)
+ 	print("main menu ", 50, 82)
+ 	if menu_option == 0 then
+		rectfill(40, 72, 43, 75, 7)
+	end
+	if menu_option == 1 then
+		rectfill(40, 82, 43, 85, 7)
+	end
+	if btn(2) then
+		menu_option = 0
+	elseif btn(3) then
+		menu_option = 1
+	end
+	-- TODO: input wait time
+	if input_wait_time > 0 then
+		input_wait_time -= 1
+	end
+	if btn(4) and input_wait_time == 0 then
+		if menu_option == 0 then
+			start_game()
+		elseif menu_option == 1 then
+			game_state = state_title
+			menu_option = 0
+			input_wait_time = 10
+		end
+	end
 end
 
 
@@ -424,7 +458,7 @@ function draw_bg()
 	if score > 7 then
 		draw_snow_bg()	
 	end
-	if score > 14 and game_state != state_game_won then
+	if score > 14 and game_state == state_game then
 		particle_spawn(16+rnd(94), rnd(128), rnd(10)-5, rnd(10)-5, 11, 3)
 	end
 end
@@ -563,6 +597,9 @@ function enemies_draw()
 		spr(spr_enemy, sx(e.x), sy(e.y), 2, 2)
 	end
 	foreach(enemies, e_draw)
+end
+function clear_enemies()
+	enemies = {}
 end
 
 cur_bul = chill_c;
