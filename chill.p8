@@ -3,13 +3,8 @@ version 5
 __lua__
 
 --------
--- base pico-8 project for gamejams and stuff.
--- simple state machine with title screen, game and gameover screens.
--- control sprite by arrows.
---
--- by default, just throws random particles around the player, and makes the game
--- go to the gameover state when the player approaches the left side of the screen.
---
+-- Murder, death, chill
+-- For "little awful jam 2016"
 -- bjorn.kempen@gmail.com / https://github.com/buffis
 --------
 
@@ -21,6 +16,7 @@ state_game      = 2
 state_gameover  = 3
 state_game_won  = 4
 state_credits   = 5
+state_dead      = 6
 input_wait_time = 10
 move_step       = 2
 gravity         = 1
@@ -62,6 +58,7 @@ function _update()
 	elseif game_state == state_gameover then update_title_or_gameover()
 	elseif game_state == state_game_won then update_game_won()
 	elseif game_state == state_credits  then update_credits()
+	elseif game_state == state_dead     then update_dead()
 	end
 end
 
@@ -74,6 +71,7 @@ function _draw()
 	elseif game_state == state_gameover then draw_gameover()
 	elseif game_state == state_game_won then draw_game_won()
 	elseif game_state == state_credits  then draw_credits()
+	elseif game_state == state_dead     then draw_dead()
 	end
 end
 
@@ -126,6 +124,19 @@ function update_game()
 	particles_move()
 	particles_prune()
 end
+
+function update_dead()
+	-- update enemies
+	enemies_move()
+	enemies_prune()
+
+	-- update particles
+	bullets_move()
+	bullets_prune()
+	particles_move()
+	particles_prune()
+end
+
 
 function update_game_won()
 	-- stop shake and snowflakes
@@ -260,11 +271,10 @@ function handle_player_death()
 	end
 	foreach(enemies, e_death)
 	if was_hit and not god_mode then
-		print("YOU ARE DEAD", 40, sy(65))
-		while true do
-			
+		game_state = state_dead
+		for i=0,40,1 do
+			particle_spawn(x, y, rnd(10)-5, rnd(10)-5, 10+rnd(6), 1+rnd(4))
 		end
-		
 	end
 end
 
@@ -339,6 +349,24 @@ end
 function draw_credits()
 	print("the end", 33, 2)
 end
+
+function draw_dead()
+	-- draw background
+	draw_bg()
+	draw_floow()
+
+ 	-- enemies
+ 	enemies_draw()
+
+ 	-- particles
+	bullets_draw()
+ 	particles_draw()
+
+	color(7)
+ 	print("chill factor: " .. score .. "%", 33, 2)
+ 	print("game over", 45, 42)
+end
+
 
 
 function dumb_text_draw()
