@@ -353,7 +353,7 @@ end
 
 function spawn_new_enemy()
 	sfx(1)
-	if stage == 3 then
+	if stage == 0 then
 		rrr = flr(rnd(2))
 		if rrr == 0 then
 			enemy_spawn(120, 100, -1.5, 0, 0, 0)
@@ -393,7 +393,7 @@ function spawn_new_enemy()
 			enemy_spawn(10+rnd(100), -15, 0, 0, 5, 0)
 		end
 	end
-	if stage == 0 then
+	if stage == 5 then
 		rrr = flr(rnd(3))
 		if rrr == 0 then
 			enemy_spawn(10, 130, 0, -10, 5, 0)
@@ -742,8 +742,8 @@ function intersects_bullet(enemy)
 	ex = enemy.x
 	ey = enemy.y
 	function b_intersects(b)
-		ymatch = b.y > (ey-2) and b.y < (ey+16+2)
-		xmatch = b.x > (ex-2) and b.x < (ex+2)
+		ymatch = b.y > (ey-5) and b.y < (ey+16+2)
+		xmatch = b.x > (ex-2) and b.x < (ex+14)
 		if ymatch and xmatch then
 			enemy.dead = true
 			add_score(1)
