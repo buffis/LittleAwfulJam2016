@@ -125,6 +125,8 @@ function update_game()
 	enemies_move()
 	enemies_prune()
 
+ 	stage_update()
+
 	-- update particles
 	bullets_move()
 	bullets_prune()
@@ -342,21 +344,26 @@ function handle_game()
 	x = min(x, 127)    y = min(y, 127)
 
 	if band(gameticks, 31) == 31 then
-		rrr = flr(rnd(4))
-		sfx(1)
-		if rrr == 0 then
-			enemy_spawn(120, 100, -2.5, 0, 0, 0)
-		elseif rrr == 1 then
-			enemy_spawn(0, 100, 2.5, 0, 0, 0)
-		elseif rrr == 2 then
-			enemy_spawn(0, 70, 2.5, -12, 5, 0)
-		elseif rrr == 3 then
-			enemy_spawn(120, 70, -2.5, -12, 5, 0)
-		end
+		spawn_new_enemy()
+		
 	end
 
 	-- check player death
 	handle_player_death()
+end
+
+function spawn_new_enemy()
+	rrr = flr(rnd(4))
+	sfx(1)
+	if rrr == 0 then
+		enemy_spawn(120, 100, -2.5, 0, 0, 0)
+	elseif rrr == 1 then
+		enemy_spawn(0, 100, 2.5, 0, 0, 0)
+	elseif rrr == 2 then
+		enemy_spawn(0, 70, 2.5, -12, 5, 0)
+	elseif rrr == 3 then
+		enemy_spawn(120, 70, -2.5, -12, 5, 0)
+	end
 end
 
 function handle_player_death()
@@ -380,7 +387,7 @@ function handle_player_death()
 end
 
 function add_score(s) 
-	score += s*50
+	score += s
 	if score > highscore then
 		highscore = score
 		new_highscore = true
@@ -545,24 +552,33 @@ function draw_dead()
 end
 
 
-
-function dumb_text_draw()
-	if score >= 100 then
+function stage_update()
+	stage = get_stage()
+	if stage > 0 then
+		shake = 1.6*stage
+	end
+	if stage == 10 then
 		score = 100
 		game_state = state_game_won
- 	elseif score > 14 then
+ 	end
+end
+
+function dumb_text_draw()
+	stage = get_stage()
+	if stage == 3 then
  		big_print("chill", 25, 20)
 		big_print("frenzy", 10, 40)
-		shake = 13
- 	elseif score > 7 then
+ 	elseif stage == 2 then
  		big_print("monster", 10, 20)
 		big_print("chill", 25, 40)
-		shake = 10
- 	elseif score > 3 then
+ 	elseif stage == 1 then
  		big_print("chill", 25, 20)
 		big_print("streak", 15, 40)
-		shake = 5
  	end
+end
+
+function get_stage()
+	return flr(score / 10)
 end
 
 function draw_title()
@@ -597,11 +613,12 @@ function draw_title()
 end
 
 function draw_bg()
+	stage = get_stage()
 	rectfill(0, 0, 127, 127, 0)
-	if score > 7 then
+	if stage >= 1 then
 		draw_snow_bg()	
 	end
-	if score > 14 and game_state == state_game then
+	if stage >= 5 and game_state == state_game then
 		particle_spawn(16+rnd(94), rnd(128), rnd(10)-5, rnd(10)-5, 11, 3)
 	end
 end
