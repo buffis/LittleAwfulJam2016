@@ -344,8 +344,7 @@ function handle_game()
 	x = min(x, 127)    y = min(y, 127)
 
 	if band(gameticks, 31) == 31 then
-		spawn_new_enemy()
-		
+		spawn_new_enemy()		
 	end
 
 	-- check player death
@@ -353,16 +352,56 @@ function handle_game()
 end
 
 function spawn_new_enemy()
-	rrr = flr(rnd(4))
 	sfx(1)
-	if rrr == 0 then
-		enemy_spawn(120, 100, -2.5, 0, 0, 0)
-	elseif rrr == 1 then
-		enemy_spawn(0, 100, 2.5, 0, 0, 0)
-	elseif rrr == 2 then
-		enemy_spawn(0, 70, 2.5, -12, 5, 0)
-	elseif rrr == 3 then
-		enemy_spawn(120, 70, -2.5, -12, 5, 0)
+	if stage == 3 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(120, 100, -1.5, 0, 0, 0)
+		elseif rrr == 1 then
+			enemy_spawn(0, 100, 1.5, 0, 0, 0)
+		end
+	end
+	if stage == 1 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(120, 100, -2, 0, 0, 0)
+		elseif rrr == 1 then
+			enemy_spawn(0, 100, 2, 0, 0, 0)
+		end
+	end
+	if stage == 2 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(0, 70, 0.5 + rnd(1), -9 - rnd(5), 5, 0)
+		elseif rrr == 1 then
+			enemy_spawn(120, 70, -0.5 - rnd(1),  -9 - rnd(5), 5, 0)
+		end
+	end
+	if stage == 3 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(0, 70, 2.5 + rnd(1), -11 - rnd(5), 5, 0)
+		elseif rrr == 1 then
+			enemy_spawn(x, 70, -2.5 - rnd(1),  -11 - rnd(5), 5, 0)
+		end
+	end
+	if stage == 4 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(10+rnd(100), -15, 0, 0, 5, 0)
+		elseif rrr == 1 then
+			enemy_spawn(10+rnd(100), -15, 0, 0, 5, 0)
+		end
+	end
+	if stage == 0 then
+		rrr = flr(rnd(3))
+		if rrr == 0 then
+			enemy_spawn(10, 130, 0, -10, 5, 0)
+		elseif rrr == 1 then
+			enemy_spawn(110, 130, 0, -10, 5, 0)
+		elseif rrr == 2 then
+			enemy_spawn(60, 130, 0, -10, 5, 0)
+		end
 	end
 end
 
@@ -723,7 +762,7 @@ function enemies_move()
 		e.x+=e.vx
 		e.y+=e.vy
 		e.vy += gravity
-		if e.y > 95 then
+		if e.y > 95 and e.vy >= 0 then
 			e.y = 95
 			e.vy = -e.bounce
 		end
