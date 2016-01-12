@@ -457,35 +457,35 @@ function draw_game_won()
 	palt()
 
  	if ending_state == 2 then
- 		give_cool_name_later("wow", 100)
+ 		give_cool_name_later("wow", 100, 50)
 	end
 	if ending_state == 3 then
-		give_cool_name_later("everything is so chill", 200)
+		give_cool_name_later("everything is so chill", 200, 10)
 	end
 
 	if ending_state == 5 then
-		give_cool_name_later("i love you mr chill", 200)
+		give_cool_name_later("i love you mr chill", 200, 40)
 	end
 	if ending_state == 6 then
-		give_cool_name_later("please have my babies", 200)
+		give_cool_name_later("please have my babies", 200, 40)
 	end
 
 	if ending_state == 8 then
-		give_cool_name_later("i have places to be", 200)
+		give_cool_name_later("i have places to be", 200, 15)
 	end
 	if ending_state == 9 then
-		give_cool_name_later("people to chill", 140)
+		give_cool_name_later("people to chill", 140, 20)
 	end
 	if ending_state == 10 then
-		give_cool_name_later("besides", 70)
+		give_cool_name_later("besides", 60, 50)
 	end
 	if ending_state == 11 then
-		give_cool_name_later("theres no chill in children", 150)
+		give_cool_name_later("theres no chill in children", 150, 5)
 	end
 end
 
-function give_cool_name_later(slowtext, end_count)
-	was_printed = slow_print(slowtext, ending_ticker, end_count, 5, 50)
+function give_cool_name_later(slowtext, end_count, textx)
+	was_printed = slow_print(slowtext, ending_ticker, end_count, textx, 80)
 	if was_printed then
 		ending_state += 1
 		ending_ticker = 0
@@ -555,7 +555,7 @@ end
 function stage_update()
 	stage = get_stage()
 	if stage > 0 then
-		shake = 1.6*stage
+		shake = stage
 	end
 	if stage == 10 then
 		score = 100
