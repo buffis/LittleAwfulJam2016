@@ -644,31 +644,34 @@ end
 
 function dumb_text_draw()
 	stage = get_stage()
-	if stage == 3 then
+	if stage == 1 then
  		big_print("chill", 25, 20)
-		big_print("frenzy", 10, 40)
+		big_print("streak", 15, 40)
  	elseif stage == 2 then
  		big_print("monster", 10, 20)
 		big_print("chill", 25, 40)
- 	elseif stage == 1 then
+ 	elseif stage == 3 then
  		big_print("chill", 25, 20)
-		big_print("streak", 15, 40)
- 	end
-	if stage == 4 then
+		big_print("frenzy", 10, 40)
+ 	elseif stage == 4 then
  		big_print("chilling", 0, 20)
 		big_print("spree", 25, 40)
- 	end
-
-	if stage == 0 then
+ 	elseif stage == 5 then
  		big_print("2 chill", 10, 20)
 		big_print("4 me", 30, 40)
+ 	elseif stage == 6 then
+ 		big_print("#chill", 20, 20)
+ 	elseif stage == 7 then
+ 		big_print("chill", 25, 20)
+ 		big_print("cosby", 25, 40)
+ 	elseif stage == 8 then
+ 		big_print("natural", 10, 10)
+ 		big_print("born", 30, 30)
+ 		big_print("chiller", 10, 50)
+ 	elseif stage == 9 then
+ 		big_print("very", 30, 20)
+ 		big_print("chill", 25, 40)
  	end
-
- 	-- natural born chiller
- 	-- #chill
- 	-- 2 chill 4 me
- 	-- chillmageddon
- 	-- chill cosby
 end
 
 function get_stage()
