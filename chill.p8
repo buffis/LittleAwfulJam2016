@@ -237,8 +237,19 @@ function update_game_won()
 	if ending_state == 11 then
 		ending_ticker += 1
 	end
+	
 	if ending_state == 12 then
-		ending_ticker += 1
+		y -= 1
+		if y <= 70 then
+			ending_state += 1
+		end
+	end
+
+	if ending_state == 13 then
+		y += 1
+		if y >= 140 then
+			ending_state += 1
+		end
 	end
 
 
