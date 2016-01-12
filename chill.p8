@@ -194,6 +194,7 @@ function update_game_won()
 	-- state 3 (everything is so chill)
 	if ending_state == 3 then
 		ending_ticker += 1
+		penguin_y = y
 	end
 
 	-- state 4 (penguin enters)
@@ -239,20 +240,35 @@ function update_game_won()
 	end
 	
 	if ending_state == 12 then
-		y -= 1
-		if y <= 70 then
+		y -= 2
+		x -= 1
+		if y <= 80 then
 			ending_state += 1
 		end
 	end
 
 	if ending_state == 13 then
-		y += 1
+		y += 2
+		x -= 1
 		if y >= 140 then
 			ending_state += 1
+			ending_ticker = 0
 		end
 	end
 
-
+	if ending_state == 14 then
+		ending_ticker += 1
+		if ending_ticker == 80 then
+			for i=0,40,1 do
+				particle_spawn(penguin_x, penguin_y, rnd(10)-5, rnd(10)-5, 10+rnd(6), 1+rnd(4))
+			end
+			penguin_x = 140
+			penguin_y = 140
+		end
+		if ending_ticker == 150 then
+			game_state = state_credits
+		end
+	end
 
 	-- state 7 (dialog)
 
@@ -428,7 +444,7 @@ function draw_game_won()
 	color(7)
  	print("chill factor: 100%", 33, 2)
 
-	spr(spr_penguin, penguin_x, y, 2, 2)
+	spr(spr_penguin, penguin_x, penguin_y, 2, 2)
 
  	if ending_state == 2 then
  		give_cool_name_later("wow", 100)
@@ -456,7 +472,6 @@ function draw_game_won()
 	if ending_state == 11 then
 		give_cool_name_later("theres no chill in children", 150)
 	end
-	 
 end
 
 function give_cool_name_later(slowtext, end_count)
