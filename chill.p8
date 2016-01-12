@@ -403,6 +403,46 @@ function spawn_new_enemy()
 			enemy_spawn(60, 130, 0, -10, 5, 0)
 		end
 	end
+	if stage == 6 then
+		movex = rnd(6)-3
+		enemy_spawn(20+rnd(80), 40, movex, -8, 0, 0)
+		enemy_spawn(20+rnd(80), 40, -movex, -8, 0, 0)
+	end
+	if stage == 7 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(120, 70, -3, 3, 6, 0)
+		elseif rrr == 1 then
+			enemy_spawn(0, 70, 3, 3, 6, 0)
+		end
+	end
+	if stage == 8 then
+		rrr = flr(rnd(2))
+		if rrr == 0 then
+			enemy_spawn(120, 70, -8, -7, 3, 0)
+		elseif rrr == 1 then
+			enemy_spawn(0, 70, 8, -7, 3, 0)
+		end
+	end
+	if stage == 9 then
+		rrr = flr(rnd(7))
+		if rrr == 0 then
+			enemy_spawn(120, 70, -8, -7, 3, 0)
+		elseif rrr == 1 then
+			enemy_spawn(0, 70, 8, -7, 3, 0)
+		elseif rrr == 2 then
+			enemy_spawn(10, 130, 0, -10, 5, 0)
+		elseif rrr == 3 then
+			enemy_spawn(110, 130, 0, -10, 5, 0)
+		elseif rrr == 4 then
+			enemy_spawn(60, 130, 0, -10, 5, 0)
+		elseif rrr == 5 then
+			enemy_spawn(120, 100, -2, 0, 0, 0)
+		elseif rrr == 6 then
+			enemy_spawn(0, 100, 2, 0, 0, 0)
+		end
+	end
+	
 end
 
 function handle_player_death()
@@ -614,6 +654,21 @@ function dumb_text_draw()
  		big_print("chill", 25, 20)
 		big_print("streak", 15, 40)
  	end
+	if stage == 4 then
+ 		big_print("chilling", 0, 20)
+		big_print("spree", 25, 40)
+ 	end
+
+	if stage == 0 then
+ 		big_print("2 chill", 10, 20)
+		big_print("4 me", 30, 40)
+ 	end
+
+ 	-- natural born chiller
+ 	-- #chill
+ 	-- 2 chill 4 me
+ 	-- chillmageddon
+ 	-- chill cosby
 end
 
 function get_stage()
@@ -901,6 +956,9 @@ ord_data = {
 	z = 25 ,
 }
 ord_data[" "] = 26
+ord_data["#"] = 27
+ord_data["2"] = 28
+ord_data["4"] = 29
 function ord(s)
 	return ord_data[s]
 end
@@ -1022,14 +1080,14 @@ ccc00ccc0ccccccc0cc000000cc00ccc0ccccc000cccccc00cc0cc000ccccccc000cc000000000cc
 cccccccc0cc00ccc0cccc0000ccccccc0cc000000cccccc00cc0ccc00ccccccc00ccc00000cc0ccccccccc000cc00000cc0cc0cc0cc0ccc0ccc00ccc0cc00000
 cccccccc0ccccccc0ccccccc0cccccc00cccccc00ccc00000cccccc00ccc00cc00ccc00000cccccccccccc000ccccc00cc0000cc0cc0ccc00ccccccc0ccc0000
 cc00000c0cccccc0000ccccc0cccc0000cccccc00ccc00000cccccc00cc000cc00cc000000ccccc0cc00cccc0ccccc00cc0000cc0cc00cc00cccccc00ccc0000
-00ccc00000cccc0000cccccc0cccc0000cc00cc0cc00000000000000ccc000000cc000cccccccccc000000000000000000000000000000000000000000000000
-ccccccc0ccccccc00ccccccccccccccc0cc00cc0ccc00ccc000000cccccc0ccc0ccc0ccccccccccc000000000000000000000000000000000000000000000000
-ccc0ccc0ccccccc00ccc00cccccccccc0cc00cc0ccc0cccccc0000cc0ccccccc0ccccccc000cccc0000000000000000000000000000000000000000000000000
-cc00ccc0cc00ccc00ccccc00000cc000ccc0ccc00cc0ccc0cc0000cc00ccccc000ccccc000cccc00000000000000000000000000000000000000000000000000
-cc000c00ccccccc00ccccccc000cc000cc00cc000ccccc00cc0cc0cc00ccccc0000ccc00ccccc000000000000000000000000000000000000000000000000000
-cc00cc000ccccc000000cccc000cc000ccc0cc000ccccc00cc0cc0cc0ccccccc000cc000ccc00000000000000000000000000000000000000000000000000000
-cccccccc0ccccccc0cc00ccc000cc000cccccc0000ccc000cccccccc0ccc0ccc000cc000cccccccc000000000000000000000000000000000000000000000000
-cccc00cc0cc00ccc0ccccccc000cc0000ccccc0000ccc000cccccccc0cc000cc000cc00000cccccc000000000000000000000000000000000000000000000000
+00ccc00000cccc0000cccccc0cccc0000cc00cc0cc00000000000000ccc000000cc000cccccccccc000000000cc00cc0cccccccccc0000cc0000000000000000
+ccccccc0ccccccc00ccccccccccccccc0cc00cc0ccc00ccc000000cccccc0ccc0ccc0ccccccccccc00000000ccc00cc0cccc0cccccc000cc0000000000000000
+ccc0ccc0ccccccc00ccc00cccccccccc0cc00cc0ccc0cccccc0000cc0ccccccc0ccccccc000cccc000000000cccccccccc0000ccccc00ccc0000000000000000
+cc00ccc0cc00ccc00ccccc00000cc000ccc0ccc00cc0ccc0cc0000cc00ccccc000ccccc000cccc00000000000ccccccc0000cccc0ccccccc0000000000000000
+cc000c00ccccccc00ccccccc000cc000cc00cc000ccccc00cc0cc0cc00ccccc0000ccc00ccccc000000000000cc00cc0000ccccc0ccccccc0000000000000000
+cc00cc000ccccc000000cccc000cc000ccc0cc000ccccc00cc0cc0cc0ccccccc000cc000ccc0000000000000cccccccc0ccccc0000000ccc0000000000000000
+cccccccc0ccccccc0cc00ccc000cc000cccccc0000ccc000cccccccc0ccc0ccc000cc000cccccccc00000000cccccccccccccccc000000cc0000000000000000
+cccc00cc0cc00ccc0ccccccc000cc0000ccccc0000ccc000cccccccc0cc000cc000cc00000cccccc000000000cc00cc0cccccccc000000cc0000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
