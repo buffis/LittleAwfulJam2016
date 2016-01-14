@@ -101,6 +101,7 @@ function start_game()
 	game_state = state_game
 	is_shooting = false
 	score = 0
+	death_count = 0
 	shake = 1
 	snowflake_speed = 4
 	music(0,0,12)
@@ -277,9 +278,8 @@ function update_game_won()
 	if ending_state == 14 then
 		ending_ticker += 1
 		if ending_ticker == 80 then
-			for i=0,40,1 do
-				particle_spawn(penguin_x, penguin_y, rnd(10)-5, rnd(10)-5, 10+rnd(6), 1+rnd(4))
-			end
+			
+			make_explosion(penguin_x, penguin_y)
 			penguin_x = 140
 			penguin_y = 140
 		end
@@ -467,17 +467,20 @@ function handle_player_death()
 		if (e.x > (x-12)) and (e.x < (x+10)) then
 			if (e.y < (y+10)) and (e.y > (y-10)) then
 				was_hit = true
+				e.dead = true
 			end
 		end
 	end
 	foreach(enemies, e_death)
-	if was_hit and not god_mode then
-		game_state = state_dead
-		music(-1)
-		sfx(2)
-		input_wait_time = 30
-		for i=0,40,1 do
-			particle_spawn(x, y, rnd(10)-5, rnd(10)-5, 10+rnd(6), 1+rnd(4))
+	if was_hit then
+		make_explosion(x, y)
+		if not god_mode then
+			game_state = state_dead
+			music(-1)
+			sfx(2)
+			input_wait_time = 30
+		else
+			death_count += 1
 		end
 	end
 end
@@ -535,6 +538,9 @@ function draw_game()
 
 	color(7)
  	print("chill factor: " .. score .. "%", 33, 2)
+	if god_mode and death_count > 0 then
+		print("deaths: " .. death_count, 43, 10)
+	end
 end
 
 function draw_game_won()
@@ -832,7 +838,7 @@ function intersects_bullet(enemy)
 	function b_intersects(b)
 		ymatch = b.y > (ey-5) and b.y < (ey+16+2)
 		xmatch = b.x > (ex-2) and b.x < (ex+14)
-		if ymatch and xmatch then
+		if ymatch and xmatch and not enemy.dead then
 			enemy.dead = true
 			add_score(1)
 		end
@@ -960,55 +966,28 @@ end
 function big_print(bigtext,tx,ty)
 	for t=1,#bigtext,1 do
 		sss = spr_big_a
-		sss += ord(sub(bigtext, t, t))
+		sss += char_num(sub(bigtext, t, t))
 		zoomspr(sss, sx(tx), sy(ty), 2)
 		tx += 16
 	end
 	-- spr_big_a + 
 end
 
-
-ord_data = {
-	a = 0 ,
-	b = 1 ,
-	c = 2 ,
-	d = 3 ,
-	e = 4 ,
-	f = 5 ,
-	g = 6 ,
-	h = 7 ,
-	i = 8 ,
-	j = 9 ,
-	k = 10 ,
-	l = 11 ,
-	m = 12 ,
-	n = 13 ,
-	o = 14 ,
-	p = 15 ,
-	q = 16 ,
-	r = 17 ,
-	s = 18 ,
-	t = 19 ,
-	u = 20 ,
-	v = 21 ,
-	w = 22 ,
-	x = 23 ,
-	y = 24 ,
-	z = 25 ,
+-- pico-8 lua is literally the worst
+char_data = {
+	a = 0 , b = 1 , c = 2 , d = 3 , e = 4 , f = 5 , g = 6 , h = 7 ,
+	i = 8 , j = 9 , k = 10 , l = 11 , m = 12 , n = 13 , o = 14 ,
+	p = 15 , q = 16 , r = 17 , s = 18 , t = 19 , u = 20 , v = 21 ,
+	w = 22 , x = 23 , y = 24 , z = 25 ,
 }
-ord_data[" "] = 26
-ord_data["#"] = 27
-ord_data["2"] = 28
-ord_data["4"] = 29
-function ord(s)
-	return ord_data[s]
-end
-
-
-function make_explosion(ex, ey)
-	for t=1,8,1 do
-		particle_spawn(ex, ey, rnd(10)-5, rnd(10)-5, 6, 10)
-	end
+-- yup, still the worst
+char_data[" "] = 26
+char_data["#"] = 27
+char_data["2"] = 28
+char_data["4"] = 29
+function char_num(s)
+	-- there must be a better way to do this, why is there no ord() function?!?
+	return char_data[s]
 end
 
 -- simple particle engine
@@ -1039,6 +1018,11 @@ function particles_draw()
 		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size),sy(p.y+p.size),rnd(16))
 	end
 	foreach(particles, p_draw)
+end
+function make_explosion(ex, ey)
+	for t=1,25,1 do
+		particle_spawn(ex, ey, rnd(10)-5, rnd(10)-5, 8, 1+rnd(4))
+	end
 end
 -- end of particle engine --
 
