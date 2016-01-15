@@ -162,6 +162,13 @@ function update_title_or_gameover()
 	else
 		input_wait_time -= 1
 	end
+
+	particles_move()
+	particles_prune()
+
+	if band(gameticks, 1) == 1 then
+		particle_spawn(rnd(128), 130, 0, -1-rnd(2), 100, 1, 7)
+	end
 end
 
 function update_game()
@@ -763,6 +770,8 @@ function get_stage()
 end
 
 function draw_title()
+	particles_draw()
+
 	color(8)
 	logospr(spr_logo_1, 14, 4)
 	logospr(spr_logo_2, 20, 25)
