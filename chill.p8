@@ -12,7 +12,7 @@ __lua__
 --------
 
 
--- todo: fix bullet collision when facing right
+-- todo: fix length of ending dialog
 
 
 -- constants
@@ -123,7 +123,7 @@ end
 -- "game update" logic below
 
 function start_game()
-	-- game_state = state_start
+	game_state = state_game
 	is_shooting = false
 	score = 0
 	shake = 1
@@ -136,8 +136,6 @@ function start_game()
 	new_highscore = false
 
 	clear_enemies()
-
-	start_credits()
 end
 
 function update_title_or_gameover()
@@ -311,7 +309,7 @@ function update_game_won()
 			penguin_y = 140
 		end
 		if ending_ticker == 150 then
-			game_state = state_credits
+			start_credits()
 		end
 	end
 
@@ -345,6 +343,7 @@ function draw_credits()
 	spr(spr_player1, x, y, 2, 2)
 	particles_draw()
 
+	color(7)
 	if y < 130 then
 		for i=1,#credit_text,1 do
 			print(credit_text[i], 25, credit_text_y+i*10)
@@ -1054,8 +1053,8 @@ end
 
 -- simple particle engine
 particles = {}
-function particle_spawn(x, y, vx, vy, ticks, size, color)
-	p = {x=x,y=y,vx=vx,vy=vy,ticks=ticks,size=size,color=color}
+function particle_spawn(x, y, vx, vy, ticks, size, colr)
+	p = {x=x,y=y,vx=vx,vy=vy,ticks=ticks,size=size,colr=colr}
 	add(particles, p)
 end
 function particles_move()
@@ -1077,11 +1076,11 @@ function particles_prune() -- todo: optimize maybe?
 end
 function particles_draw()
 	function p_draw(p)
-		color = p.color
-		if not p.color then
-			color = rnd(16)
+		colr = p.colr
+		if not p.colr then
+			colr = rnd(16)
 		end
-		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size-1),sy(p.y+p.size-1),color)
+		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size-1),sy(p.y+p.size-1),colr)
 	end
 	foreach(particles, p_draw)
 end
