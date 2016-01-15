@@ -141,6 +141,7 @@ function start_game()
 	player_direction = dir_right
 	new_highscore = false
 
+	clear_particles()
 	clear_enemies()
 end
 
@@ -1086,6 +1087,9 @@ function particles_draw()
 		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size-1),sy(p.y+p.size-1),colr)
 	end
 	foreach(particles, p_draw)
+end
+function clear_particles()
+	particles = {}
 end
 -- end of particle engine --
 
