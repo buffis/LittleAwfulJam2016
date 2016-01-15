@@ -304,9 +304,7 @@ function update_game_won()
 	if ending_state == 14 then
 		ending_ticker += 1
 		if ending_ticker == 80 then
-			for i=0,40,1 do
-				particle_spawn(penguin_x, penguin_y, rnd(10)-5, rnd(10)-5, 10+rnd(6), 1+rnd(4))
-			end
+			make_explosion(penguin_x, penguin_y)
 			penguin_x = 140
 			penguin_y = 140
 		end
@@ -1038,8 +1036,8 @@ function char_num(s)
 end
 
 function make_explosion(ex, ey)
-	for t=1,8,1 do
-		particle_spawn(ex, ey, rnd(10)-5, rnd(10)-5, 6, 10)
+	for t=1,25,1 do
+		particle_spawn(ex, ey, rnd(10)-5, rnd(10)-5, 10, 1+rnd(4))
 	end
 end
 
