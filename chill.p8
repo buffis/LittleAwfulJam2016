@@ -98,7 +98,7 @@ end
 -- "game update" logic below
 
 function start_game()
-	game_state = state_game
+	-- game_state = state_start
 	is_shooting = false
 	score = 0
 	death_count = 0
@@ -112,6 +112,8 @@ function start_game()
 	new_highscore = false
 
 	clear_enemies()
+
+	start_credits()
 end
 
 function update_title_or_gameover()
@@ -288,17 +290,6 @@ function update_game_won()
 		end
 	end
 
-	-- state 7 (dialog)
-
-	-- state 8 (jump out of screen)
-
-	-- state 9 (explosion)
-
-	-- state 10 (start credits)
-	if ending_state == 9 then
-		-- game_state = state_credits
-	end
-
 	enemies_prune()
 	bullets_prune()
 	particles_move()
@@ -306,8 +297,28 @@ function update_game_won()
 
 end
 
-function update_credits()
+function start_credits()
+	game_state = state_credits
+	x = 8
+	y = -20
+end
 
+function update_credits()
+	y += 0.2
+	particles_move()
+	particles_prune()
+
+	if band(gameticks, 3) == 3 then
+		particle_spawn(rnd(128), 130, 0, -1-rnd(2), 100, 1, 7)
+	end
+	
+end
+
+function draw_credits()
+	print("the end", 53, 60)
+
+	spr(spr_player1, x, y, 2, 2)
+	particles_draw()
 end
 
 function handle_game()
@@ -617,9 +628,7 @@ function slow_print(slowtext, ticker, maxtick, textx, texty)
 	return ticker >= maxtick
 end
 
-function draw_credits()
-	print("the end", 53, 60)
-end
+
 
 function draw_dead()
 	-- draw background
@@ -992,8 +1001,8 @@ end
 
 -- simple particle engine
 particles = {}
-function particle_spawn(x, y, vx, vy, ticks, size)
-	p = {x=x,y=y,vx=vx,vy=vy,ticks=ticks,size=size}
+function particle_spawn(x, y, vx, vy, ticks, size, color)
+	p = {x=x,y=y,vx=vx,vy=vy,ticks=ticks,size=size,color=color}
 	add(particles, p)
 end
 function particles_move()
@@ -1015,7 +1024,11 @@ function particles_prune() -- todo: optimize maybe?
 end
 function particles_draw()
 	function p_draw(p)
-		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size),sy(p.y+p.size),rnd(16))
+		color = p.color
+		if not p.color then
+			color = rnd(16)
+		end
+		rectfill(sx(p.x),sy(p.y),sx(p.x+p.size-1),sy(p.y+p.size-1),color)
 	end
 	foreach(particles, p_draw)
 end
