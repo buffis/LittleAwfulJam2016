@@ -74,9 +74,9 @@ credit_text = {
 	"     credits      ",
 	"                  ",
 	"                  ",
-	"code:  buffi      ",
-	"art:   buffi      ",
-	"music: pizza      ",
+	"   code:  buffi   ",
+	"   art:   buffi   ",
+	"   music: pizza   ",
 	"                  ",
 	"                  ",
 	"                  ",
@@ -711,7 +711,7 @@ function draw_game_won()
 		give_cool_name_later("people to chill", 140, 20)
 	end
 	if ending_state == 10 then
-		give_cool_name_later("besides", 60, 50)
+		give_cool_name_later("besides", 50, 50)
 	end
 	if ending_state == 11 then
 		give_cool_name_later("theres no chill in children", 150, 5)
