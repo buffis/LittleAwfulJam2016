@@ -599,6 +599,13 @@ function draw_game()
  	if god_mode and death_count > 0 then
 		print("deaths: " .. death_count, 43, 10)
 	end
+	draw_chill_game_text()
+end
+
+function draw_chill_game_text()
+	for i=0,3,1 do
+		print("chill", 2*((gameticks+i*3*10)%64), (gameticks + i*2*40) % 128 )
+	end
 end
 
 function draw_game_won()
