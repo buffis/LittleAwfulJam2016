@@ -141,6 +141,7 @@ function start_game()
 	penguin_x = 140
 	score = 0
 	death_count = 0
+	bullet_sound_counter = 0
 	shake = 1
 	snowflake_speed = 4
 	music(game_music, 0, 7)
@@ -405,6 +406,10 @@ function draw_credits()
 end
 
 function handle_game()
+	if bullet_sound_counter > 0 then
+		bullet_sound_counter -= 1
+	end
+
 	if (btn(0)) then
 		x-=move_step
 		player_direction = dir_left
@@ -440,7 +445,9 @@ function handle_game()
 
 		s = next_bullet()
 		if s != 0 then
-			play_sfx(13)
+			if bullet_sound_counter == 0 then
+				play_sfx(13)
+			end
 			bullet_spawn(bx, by, bvx, bvy, s)
 		else
 			bullet_wait = 1
@@ -463,6 +470,7 @@ end
 
 function spawn_new_enemy()
 	play_sfx(14)
+	bullet_sound_counter = 15
 	if stage == 0 then
 		rrr = flr(rnd(2))
 		if rrr == 0 then
