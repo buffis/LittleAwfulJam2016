@@ -185,7 +185,7 @@ function update_title_or_gameover()
 end
 
 function start_getready()
-	get_ready_count = 180
+	get_ready_count = 1
 	-- get_ready_count = 10
 	game_state = state_getready
 	music(0, 0, 7)
@@ -216,7 +216,7 @@ function update_game()
 	enemies_move()
 	enemies_prune()
 
- 	if stage > 0 and game_music == 1 then
+ 	if stage > 3 and game_music == 1 then
  		game_music += 1
  		music(game_music, 0, 7)
  		play_sfx(17)
@@ -408,6 +408,8 @@ function draw_credits()
 		print("and everything was chill", 15, 35)
 		if y > 150 then
 			print("the end", 50, 70)
+		end
+		if y > 160 then
 			music(-1)
 		end
 	end
@@ -435,7 +437,7 @@ function handle_game()
 	if (btn(4) and bullet_wait == 0) then
 		bullet_wait = 2
 		if player_direction == dir_left then
-			bx = x-2
+			bx = x+5
 			by = y + 3 + rnd(3)
 			bvx = -4
 			bvy = 0
@@ -492,17 +494,17 @@ function spawn_new_enemy()
 	if stage == 1 then
 		rrr = flr(rnd(2))
 		if rrr == 0 then
-			enemy_spawn(120, 100, -2, 0, 0, 0)
+			enemy_spawn(120, 100, -2, 0, 4+rnd(2), 0)
 		elseif rrr == 1 then
-			enemy_spawn(0, 100, 2, 0, 0, 0)
+			enemy_spawn(0, 100, 2, 0, 4+rnd(2), 0)
 		end
 	end
 	if stage == 2 then
 		rrr = flr(rnd(2))
 		if rrr == 0 then
-			enemy_spawn(0, 70, 0.5 + rnd(1), -9 - rnd(5), 5, 0)
+			enemy_spawn(0, 70, 0.5 + rnd(1), -9-rnd(5), 5, 0)
 		elseif rrr == 1 then
-			enemy_spawn(120, 70, -0.5 - rnd(1),  -9 - rnd(5), 5, 0)
+			enemy_spawn(120, 70, -0.5 - rnd(1), -9-rnd(5), 5, 0)
 		end
 	end
 	if stage == 3 then
@@ -514,21 +516,14 @@ function spawn_new_enemy()
 		end
 	end
 	if stage == 4 then
+		enemy_spawn(rnd(100)+10, 66, rnd(5)-2, -10, 5, 0)
+	end
+	if stage == 5 then
 		rrr = flr(rnd(2))
 		if rrr == 0 then
 			enemy_spawn(10+rnd(100), -15, 0, 0, 5, 0)
 		elseif rrr == 1 then
 			enemy_spawn(10+rnd(100), -15, 0, 0, 5, 0)
-		end
-	end
-	if stage == 5 then
-		rrr = flr(rnd(3))
-		if rrr == 0 then
-			enemy_spawn(10, 130, 0, -10, 5, 0)
-		elseif rrr == 1 then
-			enemy_spawn(110, 130, 0, -10, 5, 0)
-		elseif rrr == 2 then
-			enemy_spawn(60, 130, 0, -10, 5, 0)
 		end
 	end
 	if stage == 6 then
@@ -539,9 +534,9 @@ function spawn_new_enemy()
 	if stage == 7 then
 		rrr = flr(rnd(2))
 		if rrr == 0 then
-			enemy_spawn(120, 70, -3, 3, 6, 0)
+			enemy_spawn(120, 70+rnd(40), -3, 3, 4+rnd(4), 0)
 		elseif rrr == 1 then
-			enemy_spawn(0, 70, 3, 3, 6, 0)
+			enemy_spawn(0, 70+rnd(40), 3, 3, 4+rnd(4), 0)
 		end
 	end
 	if stage == 8 then
@@ -557,17 +552,17 @@ function spawn_new_enemy()
 		if rrr == 0 then
 			enemy_spawn(120, 70, -8, -7, 3, 0)
 		elseif rrr == 1 then
-			enemy_spawn(0, 70, 8, -7, 3, 0)
+			enemy_spawn(0, 70, 0.5 + rnd(1), -9 - rnd(5), 5, 0)
 		elseif rrr == 2 then
-			enemy_spawn(10, 130, 0, -10, 5, 0)
+			enemy_spawn(rnd(100)+10, 66, rnd(5)-2, -10, 5, 0)
 		elseif rrr == 3 then
-			enemy_spawn(110, 130, 0, -10, 5, 0)
+			enemy_spawn(120, 70+rnd(40), -3, 3, 4+rnd(4), 0)
 		elseif rrr == 4 then
-			enemy_spawn(60, 130, 0, -10, 5, 0)
+			enemy_spawn(0, 70+rnd(40), 3, 3, 4+rnd(4), 0)
 		elseif rrr == 5 then
-			enemy_spawn(120, 100, -2, 0, 0, 0)
+			enemy_spawn(120, 70, -8, -7, 3, 0)
 		elseif rrr == 6 then
-			enemy_spawn(0, 100, 2, 0, 0, 0)
+			enemy_spawn(0, 70, 8, -7, 3, 0)
 		end
 	end
 	
@@ -691,7 +686,7 @@ function draw_game_won()
 	palt()
 
  	if ending_state == 2 then
- 		give_cool_name_later("wow", 100, 50)
+ 		give_cool_name_later("wow", 103, 50)
 	end
 	if ending_state == 3 then
 		give_cool_name_later("everything is so chill", 200, 10)
@@ -711,7 +706,7 @@ function draw_game_won()
 		give_cool_name_later("people to chill", 140, 20)
 	end
 	if ending_state == 10 then
-		give_cool_name_later("besides", 50, 50)
+		give_cool_name_later("besides", 40, 50)
 	end
 	if ending_state == 11 then
 		give_cool_name_later("theres no chill in children", 150, 5)
