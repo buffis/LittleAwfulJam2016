@@ -23,6 +23,7 @@ state_gameover  = 3
 state_game_won  = 4
 state_credits   = 5
 state_dead      = 6
+state_getready  = 7
 
 input_wait_time = 10
 move_step       = 2
@@ -111,6 +112,7 @@ function _update()
 	elseif game_state == state_game_won then update_game_won()
 	elseif game_state == state_credits  then update_credits()
 	elseif game_state == state_dead     then update_dead()
+	elseif game_state == state_getready then update_getready()
 	end
 end
 
@@ -123,6 +125,7 @@ function _draw()
 	elseif game_state == state_game_won then draw_game_won()
 	elseif game_state == state_credits  then draw_credits()
 	elseif game_state == state_dead     then draw_dead()
+	elseif game_state == state_getready then draw_getready()
 	end
 end
 
@@ -159,7 +162,7 @@ function update_title_or_gameover()
 				god_mode = not god_mode
 				input_wait_time = 10
 			elseif menu_option == 0 then
-				start_game()
+				start_getready()
 			end
 		end
 	else
@@ -172,6 +175,28 @@ function update_title_or_gameover()
 	if band(gameticks, 1) == 1 then
 		particle_spawn(rnd(128), 130, 0, -1-rnd(2), 100, 1, 7)
 	end
+end
+
+function start_getready()
+	get_ready_count = 140
+	game_state = state_getready
+end
+
+function update_getready()
+	get_ready_count -= 1
+	if get_ready_count == 0 then
+		start_game()
+	end
+end
+
+function draw_getready()
+	color(7)
+	print("chill all the ghosts", 25, 15)
+	print("arrow keys to move", 27, 50)
+	print("[z] to chill", 38, 60)
+
+	color(rnd(16))
+	print("get ready", 45, 90)
 end
 
 function update_game()
@@ -816,7 +841,7 @@ function draw_bg()
 	if stage >= 1 then
 		draw_snow_bg()	
 	end
-	if stage >= 3 then
+	if stage >= 3 and game_state == state_game then
 		particle_spawn(rnd(128), 0, 0, 4+rnd(2), 40, 1+rnd(2), 12)
 	end
 	if stage >= 5 and game_state == state_game then
