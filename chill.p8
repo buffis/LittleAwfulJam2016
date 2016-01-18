@@ -12,12 +12,7 @@ __lua__
 -- it look nice. that is ok, it's a gamejam game
 --------
 
-
--- todo: fix length of ending dialog
-
-
--- constants
-
+-- Constants
 state_title     = 1
 state_game      = 2
 state_gameover  = 3
@@ -26,50 +21,37 @@ state_credits   = 5
 state_dead      = 6
 state_getready  = 7
 
-input_wait_time = 10
+dir_left = 4
+dir_right = 6
+
 move_step       = 2
 gravity         = 1
+input_wait_time = 10
 
--- sprites
-chill_c = 22
-chill_h = 23
-chill_i = 24
-chill_l1 = 25
-chill_l2 = 26
-
+-- Sprites
+spr_chill_c = 22
+spr_chill_h = 23
+spr_chill_i = 24
+spr_chill_l1 = 25
+spr_chill_l2 = 26
 spr_player1 = 0
 spr_player1_up = 32
 spr_player2 = 18
 spr_player2_up = 20
-
 spr_snowflake = 192
-
 spr_small_snowflake = 200
-
 spr_penguin1 = 42
 spr_penguin2 = 44
-
 spr_enemy1_1 = 97
 spr_enemy1_2 = 65
 spr_enemy2_1 = 99
 spr_enemy2_2 = 67
-
 spr_big_a = 128
-
 spr_logo_1 = 71
 spr_logo_2 = 87
 spr_logo_3 = 103
 
-dir_left = 4
-dir_right = 6
-looking_up = false
-
-ending_state = 0
-
-game_music = 1
-
-sfx_channel = 3
-
+-- Data
 credit_text = {
 	"     credits      ",
 	"                  ",
@@ -137,6 +119,7 @@ end
 -- "game update" logic below
 
 function start_game(start_score)
+	ending_state = 0
 	game_state = state_game
 	is_shooting = false
 	penguin_x = 140
@@ -145,10 +128,12 @@ function start_game(start_score)
 		score = 0
 	end
 	stage = 0
+	looking_up = false
 	death_count = 0
 	bullet_sound_counter = 0
 	shake = 1
 	snowflake_speed = 4
+	game_music = 1
 	music(game_music, 0, 7)
 
 	x = 64 y = 94
@@ -931,20 +916,20 @@ function draw_chillray()
 	
 	ty = y + 1
 	if player_direction == dir_left then
-		spr_tmp = chill_l2
+		spr_tmp = spr_chill_l2
 		for t=x,0,-4 do
-			if spr_tmp < chill_c then
-				spr_tmp = chill_l2
+			if spr_tmp < spr_chill_c then
+				spr_tmp = spr_chill_l2
 			else
 				spr(spr_tmp, sx(t+rnd(2)), sy(ty+rnd(6)))
 				spr_tmp -= 1
 			end
 		end
 	else
-		spr_tmp = chill_c
+		spr_tmp = spr_chill_c
 		for t=x+13,127,4 do
-			if spr_tmp > chill_l2 then
-				spr_tmp = chill_c
+			if spr_tmp > spr_chill_l2 then
+				spr_tmp = spr_chill_c
 			else
 				spr(spr_tmp, sx(t+rnd(2)), sy(ty+rnd(6)))
 				spr_tmp += 1
@@ -1040,19 +1025,19 @@ function clear_enemies()
 	enemies = {}
 end
 
-cur_bul = chill_c;
+cur_bul = spr_chill_c;
 function next_bullet()
 	if player_direction == dir_right then
-		if cur_bul < chill_c then
-			cur_bul = chill_l2
+		if cur_bul < spr_chill_c then
+			cur_bul = spr_chill_l2
 			return 0
 		end
 		t = cur_bul
 		cur_bul -= 1
 	end
 	if player_direction == dir_left then
-		if cur_bul > chill_l2 then
-			cur_bul = chill_c
+		if cur_bul > spr_chill_l2 then
+			cur_bul = spr_chill_c
 			return 0
 		end
 		t = cur_bul
