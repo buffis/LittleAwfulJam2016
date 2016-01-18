@@ -15,7 +15,6 @@ __lua__
 -- Constants
 state_title     = 1
 state_game      = 2
-state_gameover  = 3
 state_game_won  = 4
 state_credits   = 5
 state_dead      = 6
@@ -26,7 +25,6 @@ dir_right = 6
 
 move_step       = 2
 gravity         = 1
-input_wait_time = 10
 
 -- Sprites
 spr_chill_c = 22
@@ -81,7 +79,6 @@ credit_text = {
 -- pico-8 entry points
 
 function _init()
-	highscore = 0
 	input_wait_time = 10
 	game_state = state_title
 	gameticks = 0
@@ -93,9 +90,8 @@ function _update()
 	gameticks += 1
 	shakex = rnd(shake)
 	shakey = rnd(shake)
-	if     game_state == state_title    then update_title_or_gameover()
+	if     game_state == state_title    then update_title()
 	elseif game_state == state_game     then update_game()
-	elseif game_state == state_gameover then update_title_or_gameover()
 	elseif game_state == state_game_won then update_game_won()
 	elseif game_state == state_credits  then update_credits()
 	elseif game_state == state_dead     then update_dead()
@@ -105,10 +101,8 @@ end
 
 function _draw()
 	cls()
-
 	if     game_state == state_title    then draw_title()
 	elseif game_state == state_game     then draw_game()
-	elseif game_state == state_gameover then draw_gameover()
 	elseif game_state == state_game_won then draw_game_won()
 	elseif game_state == state_credits  then draw_credits()
 	elseif game_state == state_dead     then draw_dead()
@@ -116,20 +110,17 @@ function _draw()
 	end
 end
 
--- "game update" logic below
+-- State transition logic
 
-function start_game(start_score)
+function start_game(start_score, deaths)
 	ending_state = 0
 	game_state = state_game
 	is_shooting = false
 	penguin_x = 140
-	score = start_score
-	if not score then
-		score = 0
-	end
+	score = start_score or 0
 	stage = 0
 	looking_up = false
-	death_count = 0
+	death_count = deaths or 0
 	bullet_sound_counter = 0
 	shake = 1
 	snowflake_speed = 4
@@ -139,13 +130,28 @@ function start_game(start_score)
 	x = 64 y = 94
 	bullet_wait = 0
 	player_direction = dir_right
-	new_highscore = false
-
+	
 	clear_particles()
 	clear_enemies()
 end
 
-function update_title_or_gameover()
+function start_getready()
+	get_ready_count = 180
+	game_state = state_getready
+	music(0, 0, 7)
+end
+
+function start_credits()
+	game_state = state_credits
+	x = 8
+	y = -20
+	credit_text_y = 130
+	music(1, 0, 7)
+end
+
+-- "game update" logic below
+
+function update_title()
 	if input_wait_time == 0 then
 		if btn(2) then
 			menu_option = 0
@@ -164,18 +170,12 @@ function update_title_or_gameover()
 		input_wait_time -= 1
 	end
 
-	particles_move()
-	particles_prune()
-
+	-- Spawn particles from bottom of screen.
 	if band(gameticks, 1) == 1 then
 		particle_spawn(rnd(128), 130, 0, -1-rnd(2), 100, 1, 7)
 	end
-end
-
-function start_getready()
-	get_ready_count = 180
-	game_state = state_getready
-	music(0, 0, 7)
+	particles_move()
+	particles_prune()
 end
 
 function update_getready()
@@ -183,16 +183,6 @@ function update_getready()
 	if get_ready_count == 0 then
 		start_game()
 	end
-end
-
-function draw_getready()
-	color(7)
-	print("chill all the ghosts", 25, 15)
-	print("arrow keys to move", 27, 50)
-	print("[z] to chill", 38, 60)
-
-	color(rnd(16))
-	print("get ready", 45, 90)
 end
 
 function update_game()
@@ -225,6 +215,28 @@ function update_dead()
 		shake = 1
 	end
 
+	if btn(2) and input_wait_time == 0 then
+		menu_option = max(0, menu_option-1)
+		input_wait_time = 6
+	elseif btn(3) and input_wait_time == 0 then
+		menu_option = min(2, menu_option+1)
+		input_wait_time = 6
+	elseif btn(4) and input_wait_time == 0 then
+		play_sfx(16)
+		if menu_option == 0 then
+			start_game()
+		elseif menu_option == 1 then
+			continue_score = flr(score / 10)*10
+			start_game(continue_score, death_count+1)
+		elseif menu_option == 2 then
+			game_state = state_title
+			input_wait_time = 10
+		end
+		menu_option = 0
+	elseif input_wait_time > 0 then
+		input_wait_time -= 1
+	end
+
 	-- update enemies
 	enemies_move()
 	enemies_prune()
@@ -235,7 +247,6 @@ function update_dead()
 	particles_move()
 	particles_prune()
 end
-
 
 function update_game_won()
 	-- state 0
@@ -362,14 +373,6 @@ function update_game_won()
 
 end
 
-function start_credits()
-	game_state = state_credits
-	x = 8
-	y = -20
-	credit_text_y = 130
-	music(1, 0, 7)
-end
-
 function update_credits()
 	y += 0.2
 	particles_move()
@@ -380,26 +383,6 @@ function update_credits()
 	end
 
 	credit_text_y -= 0.5
-end
-
-function draw_credits()
-	spr(spr_player1, x, y, 2, 2)
-	particles_draw()
-
-	color(7)
-	if y < 130 then
-		for i=1,#credit_text,1 do
-			print(credit_text[i], 25, credit_text_y+i*10)
-		end
-	else
-		print("and everything was chill", 15, 35)
-		if y > 150 then
-			print("the end", 50, 70)
-		end
-		if y > 160 then
-			music(-1)
-		end
-	end
 end
 
 function handle_game()
@@ -579,14 +562,6 @@ function handle_player_death()
 	end
 end
 
-function add_score(s) 
-	score += s
-	if score > highscore then
-		highscore = score
-		new_highscore = true
-	end
-end
-
 function sx(x)
 	return x + shakex
 end
@@ -632,10 +607,40 @@ function draw_game()
 
 	color(7)
  	print("chill factor: " .. score .. "%", 33, 2)
- 	if god_mode and death_count > 0 then
+ 	if death_count > 0 then
 		print("deaths: " .. death_count, 43, 10)
+	end	
+end
+
+
+function draw_getready()
+	color(7)
+	print("chill all the ghosts", 25, 15)
+	print("arrow keys to move", 27, 50)
+	print("[z] to chill", 38, 60)
+
+	color(rnd(16))
+	print("get ready", 45, 90)
+end
+
+function draw_credits()
+	spr(spr_player1, x, y, 2, 2)
+	particles_draw()
+
+	color(7)
+	if y < 130 then
+		for i=1,#credit_text,1 do
+			print(credit_text[i], 25, credit_text_y+i*10)
+		end
+	else
+		print("and everything was chill", 15, 35)
+		if y > 150 then
+			print("the end", 50, 70)
+		end
+		if y > 160 then
+			music(-1)
+		end
 	end
-	
 end
 
 function draw_chill_game_text()
@@ -747,34 +752,6 @@ function draw_dead()
 	end
 	if menu_option == 2 then
 		rectfill(40, 92, 43, 95, 7)
-	end
-	if btn(2) and input_wait_time == 0 then
-		menu_option -= 1
-		menu_option = max(0, menu_option)
-		input_wait_time = 6
-	elseif btn(3) and input_wait_time == 0 then
-		menu_option += 1
-		menu_option = min(2, menu_option)
-		input_wait_time = 6
-	end
-	-- todo: input wait time
-	if input_wait_time > 0 then
-		input_wait_time -= 1
-	end
-	if btn(4) and input_wait_time == 0 then
-		play_sfx(16)
-		if menu_option == 0 then
-			menu_option = 0
-			start_game()
-		elseif menu_option == 1 then
-			menu_option = 0
-			continue_score = flr(score / 10)*10
-			start_game(continue_score)
-		elseif menu_option == 2 then
-			game_state = state_title
-			menu_option = 0
-			input_wait_time = 10
-		end
 	end
 end
 
@@ -938,21 +915,6 @@ function draw_chillray()
 	end
 end
 
-function draw_gameover()
-	color(7)
-	print("you lost!\n", 50, 50)
-	print("score:", 52, 60)
-	print(score, 78, 60)
-	if new_highscore then
-		print("new highscore:", 38, 70)
-		print(highscore, 96, 70)
-	else
-		print("highscore:", 45, 70)
-		print(highscore, 87, 70)
-	end
-end
-
-
 function intersects_bullet(enemy)
 	ex = enemy.x
 	ey = enemy.y
@@ -961,7 +923,7 @@ function intersects_bullet(enemy)
 		xmatch = b.x > (ex-2) and b.x < (ex+14)
 		if ymatch and xmatch and not enemy.dead then
 			enemy.dead = true
-			add_score(1)
+			score += 1
 		end
 	end
 	foreach(bullets, b_intersects)
