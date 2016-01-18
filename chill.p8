@@ -136,11 +136,14 @@ end
 
 -- "game update" logic below
 
-function start_game()
+function start_game(start_score)
 	game_state = state_game
 	is_shooting = false
 	penguin_x = 140
-	score = 0
+	score = start_score
+	if not score then
+		score = 0
+	end
 	stage = 0
 	death_count = 0
 	bullet_sound_counter = 0
@@ -749,18 +752,26 @@ function draw_dead()
 	color(7)
  	print("chill factor: " .. score .. "%", 33, 2)
  	print("game over", 45, 42)
- 	print("try again ", 50, 72)
- 	print("main menu ", 50, 82)
+ 	print("restart ", 50, 72)
+ 	print("continue ", 50, 82)
+ 	print("main menu ", 50, 92)
  	if menu_option == 0 then
 		rectfill(40, 72, 43, 75, 7)
 	end
 	if menu_option == 1 then
 		rectfill(40, 82, 43, 85, 7)
 	end
-	if btn(2) then
-		menu_option = 0
-	elseif btn(3) then
-		menu_option = 1
+	if menu_option == 2 then
+		rectfill(40, 92, 43, 95, 7)
+	end
+	if btn(2) and input_wait_time == 0 then
+		menu_option -= 1
+		menu_option = max(0, menu_option)
+		input_wait_time = 6
+	elseif btn(3) and input_wait_time == 0 then
+		menu_option += 1
+		menu_option = min(2, menu_option)
+		input_wait_time = 6
 	end
 	-- todo: input wait time
 	if input_wait_time > 0 then
@@ -769,8 +780,13 @@ function draw_dead()
 	if btn(4) and input_wait_time == 0 then
 		play_sfx(16)
 		if menu_option == 0 then
+			menu_option = 0
 			start_game()
 		elseif menu_option == 1 then
+			menu_option = 0
+			continue_score = flr(score / 10)*10
+			start_game(continue_score)
+		elseif menu_option == 2 then
 			game_state = state_title
 			menu_option = 0
 			input_wait_time = 10
