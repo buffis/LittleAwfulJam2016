@@ -249,8 +249,7 @@ function update_dead()
 end
 
 function update_game_won()
-	-- state 0
-	-- stop shake and snowflakes
+	-- state 0 (stop shake and snowflakes)
 	if ending_state == 0 then
 		if shake > 1 then
 			shake -= 0.1
@@ -267,7 +266,7 @@ function update_game_won()
 		end
 	end
 
-	-- state 1
+	-- state 1 (player moves to position)
 	if ending_state == 1 then
 		if x < 55 then
 			x += 0.5
@@ -313,7 +312,7 @@ function update_game_won()
 		ending_ticker += 1
 	end
 
-	-- state 6 (face away)
+	-- state 7 (face away)
 	if ending_state == 7 then
 		player_direction = dir_left
 		x -= 0.2
@@ -323,19 +322,27 @@ function update_game_won()
 		end
 	end
 
+	-- state 8 (i have place to be)
 	if ending_state == 8 then
 		ending_ticker += 1
 	end
+
+	-- state 9 (people to chill)
 	if ending_state == 9 then
 		ending_ticker += 1
 	end
+
+	-- state 10 (besides)
 	if ending_state == 10 then
 		ending_ticker += 1
 	end
+
+	-- state 11 (theres no chill in children)
 	if ending_state == 11 then
 		ending_ticker += 1
 	end
 	
+	-- state 12 (jump up)
 	if ending_state == 12 then
 		y -= 2
 		x -= 1
@@ -344,6 +351,7 @@ function update_game_won()
 		end
 	end
 
+	-- state 13 (jump down)
 	if ending_state == 13 then
 		y += 2
 		x -= 1
@@ -353,6 +361,7 @@ function update_game_won()
 		end
 	end
 
+	-- state 14 (explode penguin)
 	if ending_state == 14 then
 		ending_ticker += 1
 		if ending_ticker == 80 then
@@ -370,7 +379,6 @@ function update_game_won()
 	bullets_prune()
 	particles_move()
 	particles_prune()
-
 end
 
 function update_credits()
@@ -535,7 +543,6 @@ function spawn_new_enemy()
 			enemy_spawn(0, 70, 8, -7, 3, 0)
 		end
 	end
-	
 end
 
 function handle_player_death()
@@ -575,7 +582,7 @@ function draw_game()
 	-- draw background
 	draw_bg()
 
-	draw_floow()
+	draw_floor_and_roof()
 	if is_shooting then
 		draw_chillray()
 	end
@@ -653,7 +660,7 @@ end
 function draw_game_won()
 	-- draw background
 	draw_bg()
-	draw_floow()
+	draw_floor_and_roof()
 
  	-- player
  	flipx = player_direction == dir_left
@@ -678,34 +685,25 @@ function draw_game_won()
 	palt()
 
  	if ending_state == 2 then
- 		give_cool_name_later("wow", 80, 50)
-	end
-	if ending_state == 3 then
-		give_cool_name_later("everything is so chill", 200, 10)
-	end
-
-	if ending_state == 5 then
-		give_cool_name_later("i love you mr chill", 130, 40)
-	end
-	if ending_state == 6 then
-		give_cool_name_later("please have my babies", 120, 40)
-	end
-
-	if ending_state == 8 then
-		give_cool_name_later("i have places to be", 140, 15)
-	end
-	if ending_state == 9 then
-		give_cool_name_later("people to chill", 100, 20)
-	end
-	if ending_state == 10 then
-		give_cool_name_later("besides", 50, 40)
-	end
-	if ending_state == 11 then
-		give_cool_name_later("theres no chill in children", 150, 5)
+ 		step_print("wow", 80, 50)
+	elseif ending_state == 3 then
+		step_print("everything is so chill", 200, 10)
+	elseif ending_state == 5 then
+		step_print("i love you mr chill", 130, 40)
+	elseif ending_state == 6 then
+		step_print("please have my babies", 120, 40)
+	elseif ending_state == 8 then
+		step_print("i have places to be", 140, 15)
+	elseif ending_state == 9 then
+		step_print("people to chill", 100, 20)
+	elseif ending_state == 10 then
+		step_print("besides", 50, 40)
+	elseif ending_state == 11 then
+		step_print("theres no chill in children", 150, 5)
 	end
 end
 
-function give_cool_name_later(slowtext, end_count, textx)
+function step_print(slowtext, end_count, textx)
 	was_printed = slow_print(slowtext, ending_ticker, end_count, textx, 80)
 	if was_printed then
 		ending_state += 1
@@ -724,12 +722,10 @@ function slow_print(slowtext, ticker, maxtick, textx, texty)
 	return ticker >= maxtick
 end
 
-
-
 function draw_dead()
 	-- draw background
 	draw_bg()
-	draw_floow()
+	draw_floor_and_roof()
 
  	-- enemies
  	enemies_draw()
@@ -819,18 +815,12 @@ function draw_title()
 	color(7)
 	print("start game", 40, 90)
 	print("chill", 40, 100)
-	if god_mode then
-		print("(on)", 70, 100)
-	else
-		print("(off)", 70, 100)
-	end
-	if menu_option == 0 then
-		rectfill(30, 90, 33, 93, 7)
-	end
-	if menu_option == 1 then
-		rectfill(30, 100, 33, 103, 7)
-	end
-
+	god_text = god_mode and "(on)" or "(off)"
+	print(god_text, 70, 100)
+	
+	menu_y = 90 + menu_option*10
+	rectfill(30, menu_y, 33, menu_y+3, 7)
+	
 	if god_mode then
 		print("in chill mode, you're too chill", 3, 115)
 		print("to take damage from enemies", 10, 123)
@@ -853,6 +843,7 @@ function draw_bg()
 		draw_chill_game_text()
 	end
 end
+
 function draw_snow_bg()
 	tmp = band(gameticks, 7)*snowflake_speed
 	spp = spr_snowflake
@@ -873,7 +864,7 @@ function draw_snow_bg()
 	end
 end
 
-function draw_floow()
+function draw_floor_and_roof()
 	palt(0, false)
 	palt(1, true)
 	for t=-1,8,1 do
@@ -890,7 +881,6 @@ function draw_floow()
 end
 
 function draw_chillray()
-	
 	ty = y + 1
 	if player_direction == dir_left then
 		spr_tmp = spr_chill_l2
@@ -1060,7 +1050,6 @@ function big_print(bigtext,tx,ty)
 	-- spr_big_a + 
 end
 
-
 -- pico-8 lua is literally the worst
 char_data = {
 	a = 0 , b = 1 , c = 2 , d = 3 , e = 4 , f = 5 , g = 6 , h = 7 ,
@@ -1125,10 +1114,6 @@ end
 function play_sfx(sfxsample)
 	sfx(sfxsample, 3)
 end
-
-
-
-
 
 __gfx__
 0022200000000000665006565560056566605000605060000000000000000000cc90eb400000000000000000000000000000000000000000222303a0e0500000
