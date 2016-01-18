@@ -188,8 +188,7 @@ function update_title_or_gameover()
 end
 
 function start_getready()
-	get_ready_count = 1
-	-- get_ready_count = 10
+	get_ready_count = 180
 	game_state = state_getready
 	music(0, 0, 7)
 end
@@ -689,27 +688,27 @@ function draw_game_won()
 	palt()
 
  	if ending_state == 2 then
- 		give_cool_name_later("wow", 103, 50)
+ 		give_cool_name_later("wow", 80, 50)
 	end
 	if ending_state == 3 then
 		give_cool_name_later("everything is so chill", 200, 10)
 	end
 
 	if ending_state == 5 then
-		give_cool_name_later("i love you mr chill", 200, 40)
+		give_cool_name_later("i love you mr chill", 130, 40)
 	end
 	if ending_state == 6 then
-		give_cool_name_later("please have my babies", 200, 40)
+		give_cool_name_later("please have my babies", 120, 40)
 	end
 
 	if ending_state == 8 then
-		give_cool_name_later("i have places to be", 200, 15)
+		give_cool_name_later("i have places to be", 140, 15)
 	end
 	if ending_state == 9 then
-		give_cool_name_later("people to chill", 140, 20)
+		give_cool_name_later("people to chill", 100, 20)
 	end
 	if ending_state == 10 then
-		give_cool_name_later("besides", 40, 50)
+		give_cool_name_later("besides", 50, 40)
 	end
 	if ending_state == 11 then
 		give_cool_name_later("theres no chill in children", 150, 5)
