@@ -224,10 +224,10 @@ function update_dead()
 	elseif btn(4) and input_wait_time == 0 then
 		play_sfx(16)
 		if menu_option == 0 then
-			start_game()
-		elseif menu_option == 1 then
 			continue_score = flr(score / 10)*10
 			start_game(continue_score, death_count+1)
+		elseif menu_option == 1 then
+			start_game()
 		elseif menu_option == 2 then
 			game_state = state_title
 			input_wait_time = 10
@@ -742,16 +742,14 @@ function draw_dead()
 	color(7)
  	print("chill factor: " .. score .. "%", 33, 2)
  	print("game over", 45, 42)
- 	print("restart ", 50, 72)
- 	print("continue ", 50, 82)
+ 	print("continue ", 50, 72)
+ 	print("restart ", 50, 82)
  	print("main menu ", 50, 92)
  	if menu_option == 0 then
 		rectfill(40, 72, 43, 75, 7)
-	end
-	if menu_option == 1 then
+	elseif menu_option == 1 then
 		rectfill(40, 82, 43, 85, 7)
-	end
-	if menu_option == 2 then
+	elseif menu_option == 2 then
 		rectfill(40, 92, 43, 95, 7)
 	end
 end
