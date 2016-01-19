@@ -361,16 +361,20 @@ function update_game_won()
 		end
 	end
 
-	-- state 14 (explode penguin)
+	-- state 14 (explode sad penguin)
 	if ending_state == 14 then
 		ending_ticker += 1
-		if ending_ticker == 80 then
+		if ending_ticker == 60 then
+			-- spawn a penguin tear
+			particle_spawn(penguin_x+4, penguin_y+5, 0, 0.5, 28, 2, 12)
+		end
+		if ending_ticker == 120 then
 			make_explosion(penguin_x, penguin_y)
 			penguin_x = 140
 			penguin_y = 140
 			play_sfx(15)
 		end
-		if ending_ticker == 150 then
+		if ending_ticker == 190 then
 			start_credits()
 		end
 	end
@@ -670,8 +674,6 @@ function draw_game_won()
  		spr(18, sx(x), sy(y), 2, 2, flipx)
  	end
 
- 	-- particles
- 	particles_draw()
 	color(7)
  	print("chill factor: 100%", 33, 2)
 
@@ -683,6 +685,8 @@ function draw_game_won()
 	end
 	spr(penguin_s, penguin_x, penguin_y, 2, 2)
 	palt()
+
+	particles_draw()
 
  	if ending_state == 2 then
  		step_print("wow", 80, 50)
