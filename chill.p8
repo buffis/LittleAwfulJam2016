@@ -198,12 +198,6 @@ function update_game()
 	enemies_move()
 	enemies_prune()
 
- 	if stage > 3 and game_music == 1 then
- 		game_music += 1
- 		music(game_music, 0, 7)
- 		play_sfx(57)
- 	end
-
  	stage_update()
 
 	-- update particles
@@ -778,13 +772,13 @@ end
 function stage_update()
 	new_stage = get_stage()
 	if new_stage > stage then
-		play_sfx(57)
 		stage = new_stage
 		new_music = get_game_music()
 		if new_music != cur_music then
 			cur_music = new_music
 			music(new_music, 0, 7)
 		end
+		play_sfx(57)
 		bullet_sound_counter = 20
 	end
 	if stage > 0 then
