@@ -163,13 +163,13 @@ function update_title()
 		elseif btn(3) then
 			menu_option = 1
 		elseif btn(1) or btn(4) then
-			play_sfx(56)
 			if menu_option == 1 then
 				god_mode = not god_mode
 				input_wait_time = 10
 			elseif menu_option == 0 then
 				start_getready()
 			end
+			play_sfx(56)
 		end
 	else
 		input_wait_time -= 1
