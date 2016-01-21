@@ -1,0 +1,23 @@
+HOWTOPLAY
+
+Murder, Death, Chill can either be played in browser (through the PICO-8 site)
+or through PICO-8.
+
+# 1: Play through the web browser (easiest)
+	1. Visit this link:
+	    http://www.lexaloffle.com/bbs/?tid=2982
+	2. Press the "PLAY" button.
+	3. Play
+
+# 2: Play through PICO-8
+	1. Locate your pico-8/carts folder.
+	   Default: C:\Users\USERNAME\AppData\Roaming\pico-8\carts\
+	2. Copy chill.p8 to that directory.
+	3. Start PICO-8
+	4. Enter: "LOAD CHILL"
+	5. Enter: "RUN"
+
+
+# Controls:
+	Arrow keys to move.
+	[Z] to chill.
