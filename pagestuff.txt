@@ -1,0 +1,30 @@
+-- Murder, Death, Chill --
+
+In the year 2035 the world is overrun by non-chill ghosts.
+ Chill now only exists inside the souls of a select few.
+
+ Are you a chill enough dude to chill all the ghosts,
+    and restore the chill factor of the world?
+	
+-- Game objective --
+
+Restore the chill factor of the world to 100% by chilling ghosts with your chill ray.
+Each ghost chilled will restore 1% of chill.
+
+When touched by a ghost, it will instantly drain the chill from your soul, and you will die.
+You may select [continue] to keep going, but at what cost?
+
+If videogames are too hard for you, [chill mode] can be enabled from the main menu.
+In this mode, you may freely chill around, with no risk of dying.
+This mode may render you _too chill_, so use carefully.
+
+-- WARNING --
+
+Game may trigger seizures, nausea and uncomfortable amounts of chill.
+Limit your sessions to at most six hours at the time, and drink lots of waters.
+
+-- Credits --
+
+Code: buffi
+Art: buffi
+Music: pizza
