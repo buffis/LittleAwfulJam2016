@@ -1,4 +1,4 @@
-HOWTOPLAY
+Murder, Death, Chill HOWTOPLAY
 
 Murder, Death, Chill can either be played in browser (through the PICO-8 site)
 or through PICO-8.
@@ -21,3 +21,10 @@ or through PICO-8.
 # Controls:
 	Arrow keys to move.
 	[Z] to chill.
+
+
+
+
+
+
+Game made by buffi and Pizza.
