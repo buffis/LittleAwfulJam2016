@@ -1,6 +1,6 @@
 # Murder, Death, Chill (for Little Awful Jam 2016)
 
-## **[--> Play the game here <--](http://www.lexaloffle.com/bbs/?pid=18382)**
+## **[--> Play the game here <--](http://www.lexaloffle.com/bbs/?pid=18381&tid=2982&autoplay=1#pp)**
 
 ![Murder, Death, Chill](http://i.imgur.com/I7aUTCC.gif)
 ![story](http://i.imgur.com/egG4MnZ.png)
