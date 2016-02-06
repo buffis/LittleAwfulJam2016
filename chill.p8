@@ -66,8 +66,11 @@ credit_text = {
 	"    #sagamedev    ",
 	"                  ",
 	"                  ",
+	"   chillest dude  ", -- jonterp pandering goes here
 	"                  ",
-	"  chillest dudes: ", -- judge pandering goes here
+	"     jonterp      ",
+	"                  ",
+	"  chill dudes:    ", -- judge pandering goes here
 	"                  ",
 	"  sharpenedspoon  ",
 	"    poemdexter    ",
